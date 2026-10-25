@@ -1,4 +1,4 @@
 <Solution>
-  <Project Path="GiteaBot.Tests/GiteaMIrrorBot.Tests.csproj" />
-  <Project Path="GiteaBot/GiteaMirrorBot.csproj" />
+  <Project Path="GiteaMirrorBot.Tests/GiteaMirrorBot.Tests.csproj" />
+  <Project Path="GiteaMirrorBot/GiteaMirrorBot.csproj" />
 </Solution>
