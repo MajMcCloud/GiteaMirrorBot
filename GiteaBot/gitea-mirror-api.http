@@ -1,0 +1,222 @@
+# Gitea Mirror API as used by GiteaApiClient.cs (docs/API.md, issue #472).
+# In Visual Studio, open this file and run each request via
+# "Send Request"; the responses appear in the test HTTP output window.
+@baseUrl = http://10.10.5.5:4321
+
+# Paste the API key from appsettings.json ("Gitea:ApiKey") here.
+# Deliberately no real key in this file – it also serves as documentation
+# and the repository is public. Never commit a real key.
+@api_key = PASTE_KEY_FROM_appsettings_JSON
+
+# Test targets from https://github.com/Dev-DHCIP (UR, Mockup, SRS)
+@test_org = Dev-DHCIP
+@test_repo = UR
+# A regular user account – POST /api/sync/organization deliberately returns 404 for it
+@test_user = MajMcCloud
+
+# Set manually: the "id" from the response of the corresponding creation call
+@org_id = COPY_FROM_SYNC_ORGANIZATION_RESPONSE
+@repo_id = COPY_FROM_SYNC_RESPONSE
+
+# ---------------------------------------------------------------- Catalog
+# GET /api/github/repositories – all tracked repositories including their ids
+GET {{baseUrl}}/api/github/repositories
+x-api-key: {{api_key}}
+Accept: application/json
+
+### A single repository by id (id from the catalog above)
+GET {{baseUrl}}/api/repositories/{{repo_id}}
+x-api-key: {{api_key}}
+Accept: application/json
+
+### Deliberately wrong id -> 404, does not belong to this account
+GET {{baseUrl}}/api/repositories/00000000-0000-0000-0000-000000000000
+x-api-key: {{api_key}}
+Accept: application/json
+
+### ---------------------------------------------------------------- Organizations
+### POST /api/sync/organization – role has been optional since v3.45.0 and the bot
+### no longer sends it. 200 returns organization.id, 409 returns the stored record.
+POST {{baseUrl}}/api/sync/organization
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "org": "{{test_org}}"
+}
+
+### Send again -> 409, but it also contains organization.id
+POST {{baseUrl}}/api/sync/organization
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "org": "{{test_org}}"
+}
+
+### Regression case from issue #472: user account instead of organization -> 404 with a JSON error
+POST {{baseUrl}}/api/sync/organization
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "org": "{{test_user}}"
+}
+
+### Unknown role -> 400
+POST {{baseUrl}}/api/sync/organization
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "org": "{{test_org}}",
+  "role": "superadmin"
+}
+
+### Organization list: /api/github/organizations, NOT /api/organizations
+GET {{baseUrl}}/api/github/organizations
+x-api-key: {{api_key}}
+Accept: application/json
+
+### A single organization by id (without the repository counts)
+GET {{baseUrl}}/api/organizations/{{org_id}}
+x-api-key: {{api_key}}
+Accept: application/json
+
+### Path wrongly guessed by the old docs -> JSON 404 that names method and path
+GET {{baseUrl}}/api/organizations
+x-api-key: {{api_key}}
+Accept: application/json
+
+### ---------------------------------------------------------------- Repositories
+### POST /api/sync/repository – 200 (created) or 409 (already tracked),
+### in both cases with repository.id.
+POST {{baseUrl}}/api/sync/repository
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "owner": "{{test_org}}",
+  "repo": "{{test_repo}}"
+}
+
+### Refresh an already tracked repository with force -> 409 with the record
+POST {{baseUrl}}/api/sync/repository
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "owner": "{{test_org}}",
+  "repo": "{{test_repo}}",
+  "force": true
+}
+
+### From a pasted URL: host + path segments, owner/repo remain required
+POST {{baseUrl}}/api/sync/repository
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "owner": "{{test_org}}",
+  "repo": "{{test_repo}}",
+  "host": "github.com",
+  "path": ["{{test_org}}", "{{test_repo}}", "tree", "main"]
+}
+
+### Repository does not exist at the source -> 404
+POST {{baseUrl}}/api/sync/repository
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "owner": "{{test_org}}",
+  "repo": "does-not-exist-4711"
+}
+
+### owner missing -> 400
+POST {{baseUrl}}/api/sync/repository
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "repo": "{{test_repo}}"
+}
+
+### ---------------------------------------------------------------- Mirror jobs
+POST {{baseUrl}}/api/job/mirror-repo
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "repositoryIds": ["{{repo_id}}"]
+}
+
+### Re-synchronize repositories that are already mirrored
+POST {{baseUrl}}/api/job/sync-repo
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "repositoryIds": ["{{repo_id}}"]
+}
+
+### The org job needs the id from the creation response, NOT the organization name
+POST {{baseUrl}}/api/job/mirror-org
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "organizationIds": ["{{org_id}}"]
+}
+
+### Name instead of id -> 404 (this exact case used to break the bot)
+POST {{baseUrl}}/api/job/mirror-org
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "organizationIds": ["{{test_org}}"]
+}
+
+### Empty id list -> 400
+POST {{baseUrl}}/api/job/mirror-repo
+x-api-key: {{api_key}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "repositoryIds": []
+}
+
+# ---------------------------------------------------------------- API usage pitfalls
+### POST without "Content-Type: application/json" -> 403
+### "Cross-site POST form submissions are forbidden" (without the header the client sends text/plain)
+POST {{baseUrl}}/api/job/mirror-repo
+x-api-key: {{api_key}}
+Accept: application/json
+
+{
+  "repositoryIds": ["{{repo_id}}"]
+}
+
+### Invalid key -> 401 { "success": false, "error": "Unauthorized" }
+GET {{baseUrl}}/api/github/repositories
+x-api-key: gm_this_key_is_deliberately_wrong
+Accept: application/json
+
+### Missing key -> 401
+GET {{baseUrl}}/api/github/repositories
+Accept: application/json

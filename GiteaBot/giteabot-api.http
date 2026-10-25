@@ -1,0 +1,28 @@
+# The bot's own endpoints (Web/GiteaWebhookEndpoint.cs).
+# The port comes from appsettings.json -> "Http:Urls" = http://0.0.0.0:5080
+@botUrl = http://localhost:5080
+
+### Liveness – harmless
+GET {{botUrl}}/health
+
+### A Gitea notification to the bot (TA-11)
+# WARNING: this test sends a real message into the configured
+# Telegram chat (group/topic from appsettings.json).
+POST {{botUrl}}/api/gitea/webhook
+Content-Type: application/json
+
+{
+  "title": "Sync completed",
+  "message": "Dev-DHCIP/UR has been mirrored.",
+  "type": "info",
+  "timestamp": "2026-10-25T00:00:00Z"
+}
+
+### Invalid payload (no object structure) -> 400
+POST {{botUrl}}/api/gitea/webhook
+Content-Type: application/json
+
+"just a string"
+
+### Unknown path -> 404
+GET {{botUrl}}/api/gitea/unknown
