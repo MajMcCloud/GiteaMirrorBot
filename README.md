@@ -81,6 +81,22 @@ Bot commands: `/start`, `/help`, `/status`.
 
 Duplicate questions for the same link in the same group are suppressed while the question is still open.
 
+### Screenshots
+
+> **Note:** the screenshots below currently show a **German UI** – the texts were
+> probably machine-translated when the pictures were taken. The current code sends
+> English strings: the question is "Back up this Repository/Organization through
+> Gitea?" with the buttons "Backup repository" / "Backup organization" and "Cancel".
+
+**Repository** – the bot detected a repository link and asks whether to queue the backup:
+
+![Backup a repository](Assets/screen-01-save-repo.png)
+
+**Organization** – the whole organization including all of its repositories
+(`/api/sync/organization` followed by `/api/job/mirror-org`):
+
+![Backup an organization](Assets/screen-02-save-orga.png)
+
 ### Only the configured group is handled
 
 Telegram delivers updates for **every** chat the bot is a member of. Therefore
