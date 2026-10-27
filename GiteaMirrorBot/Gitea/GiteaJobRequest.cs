@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace GiteaBot.Gitea;
+namespace GiteaMirrorBot.Gitea;
 
 /// <summary>
 /// Payload for POST /api/job/mirror-repo.

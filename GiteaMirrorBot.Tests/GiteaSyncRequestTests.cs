@@ -1,9 +1,9 @@
 ﻿using System.Text.Json;
-using GiteaBot.Analysis;
-using GiteaBot.Gitea;
+using GiteaMirrorBot.Analysis;
+using GiteaMirrorBot.Gitea;
 using Xunit;
 
-namespace GiteaBot.Tests;
+namespace GiteaMirrorBot.Tests;
 
 public class GiteaSyncRequestTests
 {

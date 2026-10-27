@@ -1,4 +1,4 @@
-﻿namespace GiteaBot.Analysis;
+﻿namespace GiteaMirrorBot.Analysis;
 
 public enum LinkKind
 {

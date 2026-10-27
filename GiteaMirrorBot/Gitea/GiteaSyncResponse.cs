@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace GiteaBot.Gitea;
+namespace GiteaMirrorBot.Gitea;
 
 /// <summary>
 /// Response of POST /api/sync/repository or POST /api/sync/organization.

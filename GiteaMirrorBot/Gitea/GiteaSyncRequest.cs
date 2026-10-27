@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using GiteaBot.Analysis;
+using GiteaMirrorBot.Analysis;
 
-namespace GiteaBot.Gitea;
+namespace GiteaMirrorBot.Gitea;
 
 /// <summary>
 /// Payload for POST /api/sync/repository.

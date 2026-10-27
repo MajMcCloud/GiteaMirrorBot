@@ -2,7 +2,7 @@
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace GiteaBot.Analysis;
+namespace GiteaMirrorBot.Analysis;
 
 /// <summary>
 /// Finds GitHub links in Telegram messages and decides whether the link points to a

@@ -1,7 +1,7 @@
-﻿using GiteaBot.Analysis;
-using GiteaBot.Web.Models;
+﻿using GiteaMirrorBot.Analysis;
+using GiteaMirrorBot.Web.Models;
 
-namespace GiteaBot;
+namespace GiteaMirrorBot;
 
 /// <summary>
 /// Offline self-test without Telegram/Gitea: verifies link detection and message formatting.
@@ -84,7 +84,7 @@ public static class SelfTest
             Type = "repository",
             Timestamp = new DateTime(2024, 5, 1, 12, 34, 56, DateTimeKind.Utc)
         };
-        Console.WriteLine(GiteaBot.Services.NotificationRouter.Format(sample));
+        Console.WriteLine(GiteaMirrorBot.Services.NotificationRouter.Format(sample));
 
         Console.WriteLine();
         Console.WriteLine(failures == 0 ? "Self-test passed." : $"Self-test finished with {failures} error(s).");

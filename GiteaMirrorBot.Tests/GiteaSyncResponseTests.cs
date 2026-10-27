@@ -1,7 +1,7 @@
-using GiteaBot.Gitea;
+using GiteaMirrorBot.Gitea;
 using Xunit;
 
-namespace GiteaBot.Tests;
+namespace GiteaMirrorBot.Tests;
 
 /// <summary>
 /// The sync responses of POST /api/sync/* return the mirror id both on 200 and on

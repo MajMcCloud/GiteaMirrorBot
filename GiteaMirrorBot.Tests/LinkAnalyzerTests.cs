@@ -1,8 +1,8 @@
-﻿using GiteaBot.Analysis;
-using GiteaBot.Web.Models;
+﻿using GiteaMirrorBot.Analysis;
+using GiteaMirrorBot.Web.Models;
 using Xunit;
 
-namespace GiteaBot.Tests;
+namespace GiteaMirrorBot.Tests;
 
 public class GitHubLinkAnalyzerTests
 {

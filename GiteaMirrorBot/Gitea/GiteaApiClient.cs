@@ -2,12 +2,12 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using GiteaBot.Analysis;
-using GiteaBot.Configuration;
+using GiteaMirrorBot.Analysis;
+using GiteaMirrorBot.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace GiteaBot.Gitea;
+namespace GiteaMirrorBot.Gitea;
 
 public sealed record GiteaResult(bool Success, int StatusCode, string Message, string? RawBody = null)
 {

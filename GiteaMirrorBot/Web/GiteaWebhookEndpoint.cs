@@ -1,12 +1,12 @@
-﻿using GiteaBot.Configuration;
-using GiteaBot.Services;
-using GiteaBot.Web.Models;
+﻿using GiteaMirrorBot.Configuration;
+using GiteaMirrorBot.Services;
+using GiteaMirrorBot.Web.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 
-namespace GiteaBot.Web;
+namespace GiteaMirrorBot.Web;
 
 /// <summary>
 /// HTTP endpoint Gitea can post its notifications to (TA-11).

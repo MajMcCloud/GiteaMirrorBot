@@ -1,4 +1,4 @@
-﻿# GiteaBot
+# GiteaMirrorBot
 
 A Telegram bot that detects GitHub links posted in a group and, on demand, backs up a repository
 or an organization through the **Gitea sync endpoints**. The application also exposes an HTTP
@@ -24,7 +24,7 @@ Everything runs in **a single process**: TelegramBotBase (long polling) + ASP.NE
   (`… / topic 42 …`). `0` or omitted = the General topic.
 
 ### 1.3 Configuration
-Fill in `GiteaBot/appsettings.json` (template: `appsettings.example.json`).
+Fill in `GiteaMirrorBot/appsettings.json` (template: `appsettings.example.json`).
 Alternatively, pass secrets that should not be committed via environment variables:
 
 | Variable | overrides |
@@ -51,14 +51,14 @@ If required values are missing, startup aborts with a clear error message.
 ## 2. Running the bot
 
 ```bash
-dotnet run --project GiteaBot
+dotnet run --project GiteaMirrorBot
 ```
 
 Output on startup:
 
 ```
 ╔══════════════════════════════════════════════════════════════
-║ GiteaBot
+║ GiteaMirrorBot
 ║ Gitea webhook endpoint : http://0.0.0.0:5080/api/gitea/webhook
 ║ Health check           : http://0.0.0.0:5080/health
 ║ Gitea base URL         : https://gitea.example.com
@@ -267,8 +267,8 @@ Two request files let you call everything straight from Visual Studio
 
 | File | Target |
 |---|---|
-| `GiteaBot/gitea-mirror-api.http` | the Gitea Mirror API itself – catalog, sync, mirror jobs and the v3.45.0 error cases |
-| `GiteaBot/giteabot-api.http` | the bot's own endpoints (`/health`, `/api/gitea/webhook`) |
+| `GiteaMirrorBot/gitea-mirror-api.http` | the Gitea Mirror API itself – catalog, sync, mirror jobs and the v3.45.0 error cases |
+| `GiteaMirrorBot/giteamirrorbot-api.http` | the bot's own endpoints (`/health`, `/api/gitea/webhook`) |
 
 The variables at the top (`@baseUrl`, `@api_key`, `@test_org`, `@test_repo`) are pre-filled with
 the public test organization `Dev-DHCIP`; paste the real API key from `appsettings.json` – the key
@@ -279,7 +279,7 @@ is intentionally not stored in the repository.
 ## 5. Tests
 
 ```bash
-dotnet test GiteaBot.Tests
+dotnet test GiteaMirrorBot.Tests
 ```
 
 85 tests cover link detection (repository vs. organization, path stubs, reserved owners,
@@ -290,7 +290,7 @@ resolution from the sync response (`GiteaSyncResponse`), the catalog fallback
 Offline smoke test without Telegram/Gitea:
 
 ```bash
-dotnet run --project GiteaBot -- --selftest
+dotnet run --project GiteaMirrorBot -- --selftest
 ```
 
 ---
@@ -318,13 +318,13 @@ each build as a ZIP archive:
 ## 7. Project structure
 
 ```
-GiteaBot/
+GiteaMirrorBot/
 ├─ Program.cs                     host, DI, console banner for the endpoint
 ├─ BotHostedService.cs            bot lifecycle (start/stop) inside the web host
 ├─ SelfTest.cs                    offline smoke test of link detection
 ├─ ServiceRegistration.cs         DI wiring
 ├─ gitea-mirror-api.http          manual test harness for the Gitea Mirror API
-├─ giteabot-api.http              manual test harness for the bot's own endpoints
+├─ giteamirrorbot-api.http              manual test harness for the bot's own endpoints
 ├─ Configuration/AppSettings.cs   configuration + validation
 ├─ Forms/StartForm.cs             splitter form: private → help, group → watcher
 ├─ Forms/GroupWatchForm.cs        reads every group message, buttons, callbacks

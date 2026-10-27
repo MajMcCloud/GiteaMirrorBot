@@ -1,9 +1,9 @@
-﻿using GiteaBot.Analysis;
-using GiteaBot.Configuration;
-using GiteaBot.Telegram;
+﻿using GiteaMirrorBot.Analysis;
+using GiteaMirrorBot.Configuration;
+using GiteaMirrorBot.Telegram;
 using Microsoft.Extensions.Logging;
 
-namespace GiteaBot.Services;
+namespace GiteaMirrorBot.Services;
 
 /// <summary>
 /// Access to the DI-built services from the Telegram forms.

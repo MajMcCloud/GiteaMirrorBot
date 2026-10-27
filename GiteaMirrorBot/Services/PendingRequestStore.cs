@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
-using GiteaBot.Analysis;
+using GiteaMirrorBot.Analysis;
 
-namespace GiteaBot.Services;
+namespace GiteaMirrorBot.Services;
 
 /// <summary>
 /// One open question from the bot ("Back up?") that an inline button can answer.

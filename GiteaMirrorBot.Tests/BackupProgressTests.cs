@@ -1,8 +1,8 @@
-﻿using GiteaBot.Analysis;
-using GiteaBot.Telegram;
+﻿using GiteaMirrorBot.Analysis;
+using GiteaMirrorBot.Telegram;
 using Xunit;
 
-namespace GiteaBot.Tests;
+namespace GiteaMirrorBot.Tests;
 
 /// <summary>
 /// Verifies the plain text generation of the "In progress" message. The Telegram part

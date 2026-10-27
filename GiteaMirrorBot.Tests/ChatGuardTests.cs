@@ -1,9 +1,9 @@
-﻿using GiteaBot.Telegram;
+﻿using GiteaMirrorBot.Telegram;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Xunit;
 
-namespace GiteaBot.Tests;
+namespace GiteaMirrorBot.Tests;
 
 /// <summary>
 /// TA-13 – the bot may only react inside the configured group.

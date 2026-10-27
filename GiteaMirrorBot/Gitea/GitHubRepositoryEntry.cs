@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace GiteaBot.Gitea;
+namespace GiteaMirrorBot.Gitea;
 
 /// <summary>
 /// Response of GET /api/github/repositories.

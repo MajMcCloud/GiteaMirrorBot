@@ -1,7 +1,7 @@
-﻿using GiteaBot.Analysis;
+﻿using GiteaMirrorBot.Analysis;
 using Microsoft.Extensions.Logging;
 
-namespace GiteaBot.Gitea;
+namespace GiteaMirrorBot.Gitea;
 
 /// <summary>
 /// What can additionally be mirrored after the record was created – resolved from the

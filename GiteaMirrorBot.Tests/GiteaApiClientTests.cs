@@ -1,10 +1,10 @@
-﻿using GiteaBot.Configuration;
-using GiteaBot.Gitea;
+﻿using GiteaMirrorBot.Configuration;
+using GiteaMirrorBot.Gitea;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Xunit;
 
-namespace GiteaBot.Tests;
+namespace GiteaMirrorBot.Tests;
 
 public class GiteaApiClientTests
 {

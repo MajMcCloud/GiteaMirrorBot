@@ -5,7 +5,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using TelegramBotBase;
 
-namespace GiteaBot.Telegram;
+namespace GiteaMirrorBot.Telegram;
 
 /// <summary>
 /// The central send point. Makes sure every message lands in the right forum topic

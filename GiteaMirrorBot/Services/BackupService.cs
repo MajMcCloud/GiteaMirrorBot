@@ -1,9 +1,9 @@
-﻿using GiteaBot.Analysis;
-using GiteaBot.Gitea;
-using GiteaBot.Telegram;
+﻿using GiteaMirrorBot.Analysis;
+using GiteaMirrorBot.Gitea;
+using GiteaMirrorBot.Telegram;
 using Microsoft.Extensions.Logging;
 
-namespace GiteaBot.Services;
+namespace GiteaMirrorBot.Services;
 
 /// <summary>
 /// Orchestrates the backup operation (TA-08/TA-09):

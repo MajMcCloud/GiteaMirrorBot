@@ -1,11 +1,11 @@
-﻿using GiteaBot.Services;
-using GiteaBot.Telegram;
+﻿using GiteaMirrorBot.Services;
+using GiteaMirrorBot.Telegram;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using TelegramBotBase.Base;
 using TelegramBotBase.Form;
 
-namespace GiteaBot.Forms;
+namespace GiteaMirrorBot.Forms;
 
 /// <summary>
 /// Entry point: routes private chats to the help form and groups to the group watcher.

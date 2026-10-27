@@ -1,9 +1,9 @@
-﻿using GiteaBot;
-using GiteaBot.Configuration;
-using GiteaBot.Gitea;
-using GiteaBot.Services;
-using GiteaBot.Telegram;
-using GiteaBot.Web;
+﻿using GiteaMirrorBot;
+using GiteaMirrorBot.Configuration;
+using GiteaMirrorBot.Gitea;
+using GiteaMirrorBot.Services;
+using GiteaMirrorBot.Telegram;
+using GiteaMirrorBot.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -39,7 +39,7 @@ var urls = appSettings.Http.Urls.Split(';', StringSplitOptions.RemoveEmptyEntrie
 builder.WebHost.UseUrls(urls);
 
 // ---------------------------------------------------------------- Services
-builder.Services.AddGiteaBotServices(appSettings);
+builder.Services.AddGiteaMirrorBotServices(appSettings);
 builder.Services.AddHostedService<BotHostedService>();
 
 var app = builder.Build();
@@ -54,7 +54,7 @@ var webhook = $"{appSettings.Http.Urls.Split(';')[0].TrimEnd('/')}{AppSettings.W
 
 Console.WriteLine();
 Console.WriteLine($"╔══════════════════════════════════════════════════════════════");
-Console.WriteLine($"║ GiteaBot");
+Console.WriteLine($"║ GiteaMirrorBot");
 Console.WriteLine($"║ Gitea webhook endpoint : {webhook}");
 Console.WriteLine($"║ Health check           : {appSettings.Http.Urls.Split(';')[0].TrimEnd('/')}/health");
 Console.WriteLine($"║ Gitea base URL         : {appSettings.Gitea.BaseUrl}");

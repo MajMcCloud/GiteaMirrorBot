@@ -1,7 +1,7 @@
-﻿using GiteaBot.Configuration;
-using GiteaBot.Forms;
-using GiteaBot.Services;
-using GiteaBot.Telegram;
+﻿using GiteaMirrorBot.Configuration;
+using GiteaMirrorBot.Forms;
+using GiteaMirrorBot.Services;
+using GiteaMirrorBot.Telegram;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -10,7 +10,7 @@ using TelegramBotBase;
 using TelegramBotBase.Builder;
 using TelegramBotBase.Commands;
 
-namespace GiteaBot;
+namespace GiteaMirrorBot;
 
 /// <summary>
 /// Hosts the Telegram bot in the same process as the Minimal API (SKILL.md §17).
@@ -125,7 +125,7 @@ public sealed class BotHostedService : IHostedService
         var topic = _settings.Telegram.TopicId > 0 ? _settings.Telegram.TopicId.ToString() : "General";
 
         return
-            "<b>GiteaBot - Status</b>" + Environment.NewLine +
+            "<b>GiteaMirrorBot - Status</b>" + Environment.NewLine +
             $"Group: <code>{_settings.Telegram.GroupId}</code>" + Environment.NewLine +
             $"Topic: <code>{topic}</code>" + Environment.NewLine +
             $"Gitea: <code>{_settings.Gitea.BaseUrl}</code>" + Environment.NewLine +

@@ -1,17 +1,17 @@
-﻿using GiteaBot.Configuration;
-using GiteaBot.Gitea;
-using GiteaBot.Services;
-using GiteaBot.Telegram;
+﻿using GiteaMirrorBot.Configuration;
+using GiteaMirrorBot.Gitea;
+using GiteaMirrorBot.Services;
+using GiteaMirrorBot.Telegram;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace GiteaBot;
+namespace GiteaMirrorBot;
 
 /// <summary>
 /// Read configuration and register services – extracted so it can be
-/// validated by automated tests (see GiteaBot.Tests).
+/// validated by automated tests (see GiteaMirrorBot.Tests).
 /// </summary>
 public static class ServiceRegistration
 {
@@ -47,7 +47,7 @@ public static class ServiceRegistration
         };
     }
 
-    public static void AddGiteaBotServices(this IServiceCollection services, AppSettings settings)
+    public static void AddGiteaMirrorBotServices(this IServiceCollection services, AppSettings settings)
     {
         services.AddSingleton(Options.Create(settings));
         services.AddSingleton(settings);

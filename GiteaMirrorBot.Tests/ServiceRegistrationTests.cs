@@ -1,14 +1,14 @@
-﻿using GiteaBot;
-using GiteaBot.Configuration;
-using GiteaBot.Gitea;
-using GiteaBot.Services;
-using GiteaBot.Telegram;
+﻿using GiteaMirrorBot;
+using GiteaMirrorBot.Configuration;
+using GiteaMirrorBot.Gitea;
+using GiteaMirrorBot.Services;
+using GiteaMirrorBot.Telegram;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Xunit;
 
-namespace GiteaBot.Tests;
+namespace GiteaMirrorBot.Tests;
 
 public class ServiceRegistrationTests
 {
@@ -59,7 +59,7 @@ public class ServiceRegistrationTests
         services.AddLogging();
 
         var settings = ServiceRegistration.ReadSettings(Config());
-        services.AddGiteaBotServices(settings);
+        services.AddGiteaMirrorBotServices(settings);
 
         using var provider = services.BuildServiceProvider();
 
@@ -78,7 +78,7 @@ public class ServiceRegistrationTests
     {
         var services = new ServiceCollection();
         services.AddLogging();
-        services.AddGiteaBotServices(ServiceRegistration.ReadSettings(Config()));
+        services.AddGiteaMirrorBotServices(ServiceRegistration.ReadSettings(Config()));
 
         using var provider = services.BuildServiceProvider();
         var client = provider.GetRequiredService<GiteaApiClient>();

@@ -1,4 +1,4 @@
-﻿namespace GiteaBot.Telegram;
+﻿namespace GiteaMirrorBot.Telegram;
 
 /// <summary>
 /// HTML is the parse mode of every bot message. Links, repository names and Gitea

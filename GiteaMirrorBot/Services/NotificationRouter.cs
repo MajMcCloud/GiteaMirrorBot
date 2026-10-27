@@ -1,11 +1,11 @@
-﻿using GiteaBot.Configuration;
-using GiteaBot.Telegram;
-using GiteaBot.Web.Models;
+﻿using GiteaMirrorBot.Configuration;
+using GiteaMirrorBot.Telegram;
+using GiteaMirrorBot.Web.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Telegram.Bot.Types.Enums;
 
-namespace GiteaBot.Services;
+namespace GiteaMirrorBot.Services;
 
 /// <summary>
 /// Forwards a notification received from Gitea into the group and there into the

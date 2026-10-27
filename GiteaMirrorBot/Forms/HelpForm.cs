@@ -1,9 +1,9 @@
-﻿using GiteaBot.Services;
+﻿using GiteaMirrorBot.Services;
 using Telegram.Bot.Types.Enums;
 using TelegramBotBase.Base;
 using TelegramBotBase.Form;
 
-namespace GiteaBot.Forms;
+namespace GiteaMirrorBot.Forms;
 
 /// <summary>Short usage description for private chats – sent once when the form opens.</summary>
 public class HelpForm : FormBase
@@ -15,7 +15,7 @@ public class HelpForm : FormBase
             var s = BotServices.Current.Settings;
 
             var text =
-                "<b>GiteaBot</b>" + Environment.NewLine +
+                "<b>GiteaMirrorBot</b>" + Environment.NewLine +
                 "Post a GitHub link in the group, for example:" + Environment.NewLine +
                 "• https://github.com/owner/repo → backs up the repository" + Environment.NewLine +
                 "• https://github.com/owner → backs up the organization" + Environment.NewLine +

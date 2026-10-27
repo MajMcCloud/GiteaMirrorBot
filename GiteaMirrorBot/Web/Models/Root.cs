@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace GiteaBot.Web.Models;
+namespace GiteaMirrorBot.Web.Models;
 
 /// <summary>
 /// Payload that Gitea sends to our endpoint (specified by the client).

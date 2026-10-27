@@ -1,6 +1,6 @@
-﻿using GiteaBot.Analysis;
-using GiteaBot.Services;
-using GiteaBot.Telegram;
+using GiteaMirrorBot.Analysis;
+using GiteaMirrorBot.Services;
+using GiteaMirrorBot.Telegram;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -9,7 +9,7 @@ using TelegramBotBase;
 using TelegramBotBase.Base;
 using TelegramBotBase.Form;
 
-namespace GiteaBot.Forms;
+namespace GiteaMirrorBot.Forms;
 
 /// <summary>
 /// Reads every message of the group (TA-04), detects GitHub links (TA-05) and asks via an
@@ -19,8 +19,8 @@ namespace GiteaBot.Forms;
 public class GroupWatchForm : GroupForm
 {
     /// <summary>Callback prefixes. Deliberately short: callback data may be at most 64 bytes.</summary>
-    public const string ConfirmPrefix = "giteabot:ok:";
-    public const string CancelPrefix = "giteabot:no:";
+    public const string ConfirmPrefix = "giteamirrorbot:ok:";
+    public const string CancelPrefix = "giteamirrorbot:no:";
 
     private static ILogger? _log;
     private static ILogger Log => _log ??= BotServices.Current.LoggerFactory.CreateLogger<GroupWatchForm>();

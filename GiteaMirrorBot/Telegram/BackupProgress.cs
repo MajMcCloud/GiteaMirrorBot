@@ -1,9 +1,9 @@
-﻿using GiteaBot.Analysis;
-using GiteaBot.Services;
+﻿using GiteaMirrorBot.Analysis;
+using GiteaMirrorBot.Services;
 using Microsoft.Extensions.Logging;
 using Telegram.Bot.Types.Enums;
 
-namespace GiteaBot.Telegram;
+namespace GiteaMirrorBot.Telegram;
 
 /// <summary>
 /// Keeps the single status message ("⏳ In progress") alive during a running Gitea

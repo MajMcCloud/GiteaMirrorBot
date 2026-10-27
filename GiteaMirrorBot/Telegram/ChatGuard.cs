@@ -1,7 +1,7 @@
 ﻿using Telegram.Bot.Types;
 using TelegramBotBase.Base;
 
-namespace GiteaBot.Telegram;
+namespace GiteaMirrorBot.Telegram;
 
 /// <summary>
 /// The soft gate that decides whether the bot may act in a chat (TA-13).

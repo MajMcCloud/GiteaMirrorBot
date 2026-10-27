@@ -1,4 +1,4 @@
-﻿namespace GiteaBot.Configuration;
+﻿namespace GiteaMirrorBot.Configuration;
 
 /// <summary>The collected, validated runtime configuration (appsettings.json + environment variables).</summary>
 public sealed class AppSettings
