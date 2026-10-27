@@ -48,7 +48,7 @@ public static class SelfTest
         }
 
         Console.WriteLine();
-        Console.WriteLine("Mehrere Links in einem Text:");
+        Console.WriteLine("Multiple links in one text:");
         foreach (var l in GitHubLinkAnalyzer.ExtractFromText(
                      "See https://github.com/majmccloud/TelegramBotFramework and also https://github.com/majmccloud – ignore the duplicate https://github.com/majmccloud/TelegramBotFramework."))
         {

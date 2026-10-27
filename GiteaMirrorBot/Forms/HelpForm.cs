@@ -22,7 +22,7 @@ public class HelpForm : FormBase
                 Environment.NewLine +
                 "The bot then asks via a button whether the backup should be queued through Gitea." + Environment.NewLine +
                 Environment.NewLine +
-                $"Gruppe: <code>{s.Telegram.GroupId}</code>" + Environment.NewLine +
+                $"Group: <code>{s.Telegram.GroupId}</code>" + Environment.NewLine +
                 $"Gitea: <code>{s.Gitea.BaseUrl}</code>";
 
             await Device.Send(text, parseMode: ParseMode.Html);

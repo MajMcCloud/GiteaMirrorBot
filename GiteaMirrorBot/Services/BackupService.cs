@@ -47,7 +47,7 @@ public sealed class BackupService
 
         try
         {
-            // 1.) Anlage
+            // 1.) Create the record
             sync = await _gitea.SyncAsync(request.Link, ct);
 
             if (sync.Success)
