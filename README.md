@@ -279,7 +279,27 @@ dotnet run --project GiteaBot -- --selftest
 
 ---
 
-## 6. Project structure
+## 6. Publishing
+
+`publish.ps1` at the solution root compiles the bot for all platforms and packs
+each build as a ZIP archive:
+
+```powershell
+.\publish.ps1                                        # asks for version and variant
+.\publish.ps1 -Version 1.2.0 -Variant SelfContained  # non-interactive
+```
+
+| Aspect | Details |
+|---|---|
+| Targets | `win-x64`, `win-arm64`, `osx-x64`, `osx-arm64`, `linux-x64`, `linux-arm64` |
+| Variants (`-Variant`) | `FrameworkDependent` (~1 MB, requires the .NET runtime on the target), `SelfContained` (~45–50 MB, ships the runtime) or `All` (default) — the interactive prompt also accepts `1`/`2`/`3` |
+| Version | prompted if not passed, format `MAJOR.MINOR.PATCH[-PreRelease]`; stamped into the assemblies too |
+| Output | `Publish\` at solution level, one ZIP per target + variant: `GiteaMirrorBot-<version>-<rid>-<variant>.zip` |
+| Secrets | the real `appsettings.json` is never shipped — each package contains a copy of `appsettings.example.json` instead |
+
+---
+
+## 7. Project structure
 
 ```
 GiteaBot/
@@ -314,7 +334,7 @@ GiteaBot/
 
 ---
 
-## 7. Notes / limitations
+## 8. Notes / limitations
 
 - Open questions live **in memory** and are gone after a restart; the buttons that were already
   sent then answer "This request is no longer open."
