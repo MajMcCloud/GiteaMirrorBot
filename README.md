@@ -174,6 +174,57 @@ printf '%s' "$GHCR_READ_TOKEN" |
 The account must have access to the package. This deployment credential is
 separate from the automatically supplied Actions token.
 
+#### Configure and run with Docker Compose
+
+Requires Docker with the Docker Compose plugin.
+
+Copy the example environment file and replace its example values:
+
+```bash
+cp .env.example .env
+```
+
+`.env` is excluded from Git. Compose reads these values and passes the
+application settings to the container:
+
+| Variable | Required | Description |
+|---|---|---|
+| `API_KEY` | Yes, secret | Telegram bot token from BotFather |
+| `TELEGRAM_GROUP_ID` | Yes | Target group's negative chat ID |
+| `GITEA_BASE_URL` | Yes | URL of the Gitea mirror service |
+| `GITEA_API_KEY` | Yes, secret | Mirror service API key, sent as `x-api-key` |
+| `TELEGRAM_TOPIC_ID` | No | Forum topic ID; defaults to `0` (General) |
+| `IMAGE_TAG` | No | Image tag; defaults to `edge` |
+
+The Gitea API key must belong to the service implementing the `/api/sync/*`
+and `/api/job/*` endpoints. It is not a GHCR token.
+
+Do not commit `.env` or pass secrets as Docker build arguments.
+
+Start the bot and check its health endpoint:
+
+```bash
+docker compose pull
+docker compose up -d
+docker compose logs --tail=100
+curl --fail http://127.0.0.1:5080/health
+```
+
+Stop the bot with `docker compose down`.
+
+The webhook has **no authentication**. The Compose file publishes port 5080
+on host loopback only. For remote access, use a trusted private network or
+an access-controlled reverse proxy; do not expose it publicly.
+
+`GITEA_BASE_URL` must be reachable from inside the container.
+`localhost` refers to the bot container itself, not the Docker host.
+
+The default image tag is `edge`. Set `IMAGE_TAG` to a published release tag
+to deploy a specific version. Private GHCR images require authentication
+with `docker login ghcr.io` before pulling.
+
+---
+
 #### Build locally
 
 Build and run the offline self-test without bot credentials:

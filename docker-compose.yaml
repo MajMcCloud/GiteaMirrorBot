@@ -1,0 +1,14 @@
+services:
+  gitea-mirror-bot:
+    image: ghcr.io/majmccloud/giteamirrorbot:${IMAGE_TAG:-edge}
+    container_name: gitea-mirror-bot
+    restart: unless-stopped
+    environment:
+      API_KEY: ${API_KEY:?Set API_KEY in .env}
+      Telegram__GroupId: ${TELEGRAM_GROUP_ID:?Set TELEGRAM_GROUP_ID in .env}
+      Telegram__TopicId: ${TELEGRAM_TOPIC_ID:-0}
+      GITEA_BASE_URL: ${GITEA_BASE_URL:?Set GITEA_BASE_URL in .env}
+      GITEA_API_KEY: ${GITEA_API_KEY:?Set GITEA_API_KEY in .env}
+      Http__Urls: http://0.0.0.0:5080
+    ports:
+      - "127.0.0.1:5080:5080"
