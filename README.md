@@ -77,8 +77,8 @@ Bot commands: `/start`, `/help`, `/status`.
 
 ### 2.1 Docker and GHCR
 
-This setup requires the accompanying `Dockerfile`, `.dockerignore`, and
-`.github/workflows/docker-build.yml` to be added to the repository first.
+The repository includes the `Dockerfile`, `.dockerignore`, and
+`.github/workflows/docker-build.yml` used by this setup.
 
 The container uses Microsoft's official .NET 10 SDK for building and the
 ASP.NET Core 10 runtime for running the bot and its HTTP endpoint.
