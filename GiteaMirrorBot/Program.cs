@@ -27,7 +27,7 @@ internal static class Program
         ConfigureConfiguration(builder);
 
         var appSettings = ServiceRegistration.ReadSettings(builder.Configuration);
-        if (!TryValidateSettings(appSettings, out var failure))
+        if (!appSettings.TryValidate(out var failure))
         {
             Console.Error.WriteLine(failure);
             return 1;
@@ -50,21 +50,6 @@ internal static class Program
     {
         builder.Configuration.AddJsonFile("appsettings.local.json", optional: true, reloadOnChange: false);
         builder.Services.Configure<AppSettings>(builder.Configuration);
-    }
-
-    private static bool TryValidateSettings(AppSettings appSettings, out string failure)
-    {
-        try
-        {
-            appSettings.Validate();
-            failure = string.Empty;
-            return true;
-        }
-        catch (Exception ex)
-        {
-            failure = ex.Message;
-            return false;
-        }
     }
 
     private static void ConfigureWebHost(WebApplicationBuilder builder, AppSettings appSettings)
