@@ -70,6 +70,121 @@ Bot commands: `/start`, `/help`, `/status`.
 
 ---
 
+### 2.1 Docker and GHCR
+
+This setup requires the accompanying `Dockerfile`, `.dockerignore`, and
+`.github/workflows/docker-build.yml` to be added to the repository first.
+
+The container uses Microsoft's official .NET 10 SDK for building and the
+ASP.NET Core 10 runtime for running the bot and its HTTP endpoint.
+It runs as a non-root user.
+
+Local `appsettings*.json` files are excluded from the Docker build context.
+Configure the container at runtime; never bake credentials into the image.
+
+#### Build and publication
+
+The workflow verifies pull requests without publishing images or logging into GHCR.
+Successful builds from `main` and version tags publish images for
+`linux/amd64` and `linux/arm64` to:
+
+    ghcr.io/majmccloud/giteamirrorbot
+
+Weekly rebuilds refresh the base images. The workflow can also be triggered
+manually on `main`. Trivy reports fixable critical/high vulnerabilities in the
+job summary; findings are informational and do not block publication.
+
+| Image tag | Meaning |
+|---|---|
+| `edge` | Latest build from `main` |
+| `sha-<short-sha>` | Build identified by its Git commit |
+| `v1.2.3` | Release built from the Git tag `v1.2.3` |
+| `latest` | Most recently published stable release, not `main` |
+| `v1.2.3-rc.1` | Prerelease; does not update `latest` |
+
+#### GitHub Actions credentials
+
+No custom repository secrets or variables are required.
+
+GitHub automatically supplies `GITHUB_TOKEN`. The publish job requests
+`contents: read` and `packages: write`.
+
+Enable GitHub Actions in the repository. If the GHCR package already exists,
+grant this repository Actions access in the package settings.
+
+Docker Hub credentials, a personal access token for publishing, and Telegram
+or Gitea credentials are not required during the build.
+
+#### Runtime configuration
+
+Create a private `bot.env` file outside the repository:
+
+```dotenv
+API_KEY=replace-with-your-BotFather-token
+Telegram__GroupId=-1001234567890
+Telegram__TopicId=0
+GITEA_BASE_URL=https://gitea-mirror.example.com
+GITEA_API_KEY=replace-with-your-gitea-mirror-api-key
+Http__Urls=http://0.0.0.0:5080
+```
+
+| Variable | Required | Description |
+|---|---|---|
+| `API_KEY` | Yes, secret | Telegram bot token from BotFather |
+| `Telegram__GroupId` | Yes | Target group's negative chat ID |
+| `GITEA_BASE_URL` | Yes | URL of the Gitea mirror service |
+| `GITEA_API_KEY` | Yes, secret | Mirror service API key, sent as `x-api-key` |
+| `Telegram__TopicId` | No | Forum topic ID; defaults to `0` (General) |
+| `Http__Urls` | No | Bind address; defaults to `http://0.0.0.0:5080` |
+
+The Gitea API key must belong to the service implementing the `/api/sync/*`
+and `/api/job/*` endpoints. It is not a GHCR token.
+
+Do not commit `bot.env` or pass secrets as Docker build arguments.
+
+#### Run the container
+
+```bash
+docker run -d --name gitea-mirror-bot --restart unless-stopped \
+  --env-file /secure/path/bot.env \
+  -p 127.0.0.1:5080:5080 \
+  ghcr.io/majmccloud/giteamirrorbot:edge
+
+curl --fail http://127.0.0.1:5080/health
+```
+
+The existing webhook has **no authentication**. This example publishes the
+HTTP port on host loopback only. If Gitea runs remotely, use a trusted private
+network or an access-controlled reverse proxy; do not expose it publicly.
+
+`GITEA_BASE_URL` must be reachable from inside the container.
+`localhost` refers to the bot container itself, not the Docker host.
+
+#### Pulling private GHCR images
+
+New GHCR packages are private by default. Either make the package public
+in its settings or authenticate the deployment machine:
+
+```bash
+printf '%s' "$GHCR_READ_TOKEN" |
+  docker login ghcr.io --username YOUR_GITHUB_USERNAME --password-stdin
+```
+
+`GHCR_READ_TOKEN` must be a classic personal access token with `read:packages`.
+The account must have access to the package. This deployment credential is
+separate from the automatically supplied Actions token.
+
+#### Build locally
+
+Build and run the offline self-test without bot credentials:
+
+```bash
+docker build -t gitea-mirror-bot .
+docker run --rm gitea-mirror-bot --selftest
+```
+
+---
+
 ## 3. Flow inside the group
 
 1. Someone posts `https://github.com/owner/repo` (paths like `/issues/3`, `/tree/main/…` are recognised too).
