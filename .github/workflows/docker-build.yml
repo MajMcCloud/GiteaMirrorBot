@@ -1,0 +1,137 @@
+name: Docker Build, Push & Security Scan
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+    paths:
+      - 'GiteaMirrorBot/**'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - '.github/workflows/docker-build.yml'
+  pull_request:
+    paths:
+      - 'GiteaMirrorBot/**'
+      - 'Dockerfile'
+      - '.dockerignore'
+      - '.github/workflows/docker-build.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 0'
+
+concurrency:
+  group: docker-build-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+
+permissions:
+  contents: read
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+
+      - name: Build local image
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          platforms: linux/amd64
+          load: true
+          pull: true
+          tags: gitea-mirror-bot:scan
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Run offline container self-test
+        run: docker run --rm gitea-mirror-bot:scan --selftest
+
+      - name: Trivy vulnerability report
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          image-ref: gitea-mirror-bot:scan
+          scanners: vuln
+          format: table
+          output: trivy-results.txt
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          # Informational, matching the base workflow; scanner failures still fail the job.
+          exit-code: '0'
+
+      - name: Write scan summary
+        run: |
+          {
+            echo '## Container vulnerability report'
+            echo 'Critical/high vulnerabilities with available fixes (informational, not a release gate).'
+            echo '```text'
+            cat trivy-results.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  publish:
+    needs: verify
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate release tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Expected a semantic version tag such as v1.2.3 or v1.2.3-rc.1."
+            exit 1
+          fi
+
+      - name: Set image name
+        id: image
+        run: echo "name=${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+
+      - name: Log into GHCR
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ steps.image.outputs.name }}
+          flavor: latest=false
+          tags: |
+            type=edge,branch=main
+            type=semver,pattern=v{{version}}
+            type=sha,format=short
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') && !contains(github.ref_name, '-') }}
+
+      - name: Build and push multi-platform image
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          pull: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

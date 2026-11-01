@@ -1,0 +1,10 @@
+**
+!GiteaMirrorBot/
+!GiteaMirrorBot/**
+GiteaMirrorBot/**/bin/
+GiteaMirrorBot/**/obj/
+GiteaMirrorBot/**/appsettings*.json
+GiteaMirrorBot/**/.env*
+GiteaMirrorBot/**/*.pfx
+GiteaMirrorBot/**/*.pem
+GiteaMirrorBot/**/*.key
