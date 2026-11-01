@@ -44,7 +44,12 @@ Private overrides without touching `appsettings.json`: `appsettings.local.json`
 }
 ```
 
-If required values are missing, startup aborts with a clear error message.
+If required values are missing or blank, startup prints all missing settings to standard error
+and exits with code `1`, without throwing a validation exception. The message includes the
+configuration keys, corresponding environment variables, and the template file location.
+Required values are `Telegram:ApiKey`, a nonzero `Telegram:GroupId`, `Gitea:BaseUrl`, and
+`Gitea:ApiKey`. `Http:Urls` has a default but must not be explicitly blank.
+`Telegram:TopicId` is optional (`0` = General topic).
 
 ---
 

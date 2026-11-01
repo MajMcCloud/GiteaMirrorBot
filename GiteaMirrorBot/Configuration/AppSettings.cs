@@ -10,31 +10,33 @@ public sealed class AppSettings
     /// <summary>The path Gitea can post its notifications to (used for the console banner).</summary>
     public const string WebhookPath = "/api/gitea/webhook";
 
-    /// <summary>Throws a descriptive exception when required values are missing.</summary>
-    public void Validate()
+    /// <summary>Reports all missing required values without throwing an exception.</summary>
+    public bool TryValidate(out string failure)
     {
         var missing = new List<string>();
 
         if (string.IsNullOrWhiteSpace(Telegram.ApiKey))
-            missing.Add("Telegram:ApiKey (the bot token from @BotFather)");
+            missing.Add("Telegram:ApiKey (the bot token from @BotFather; environment variable: API_KEY)");
 
         if (Telegram.GroupId == 0)
-            missing.Add("Telegram:GroupId (chat id of the target group, e.g. -1001234567890)");
+            missing.Add("Telegram:GroupId (chat id of the target group, e.g. -1001234567890; environment variable: Telegram__GroupId)");
 
         if (string.IsNullOrWhiteSpace(Gitea.BaseUrl))
-            missing.Add("Gitea:BaseUrl (e.g. https://gitea.example.com)");
+            missing.Add("Gitea:BaseUrl (e.g. https://gitea.example.com; environment variable: GITEA_BASE_URL)");
 
         if (string.IsNullOrWhiteSpace(Gitea.ApiKey))
-            missing.Add("Gitea:ApiKey (API key of the Gitea instance, header \"x-api-key\")");
+            missing.Add("Gitea:ApiKey (API key of the Gitea instance, header \"x-api-key\"; environment variable: GITEA_API_KEY)");
 
         if (string.IsNullOrWhiteSpace(Http.Urls))
-            missing.Add("Http:Urls (e.g. http://0.0.0.0:5080)");
+            missing.Add("Http:Urls (e.g. http://0.0.0.0:5080; environment variable: Http__Urls)");
 
-        if (missing.Count > 0)
-            throw new InvalidOperationException(
-                "Incomplete configuration. Missing:" +
-                Environment.NewLine + "  - " + string.Join(Environment.NewLine + "  - ", missing) +
-                Environment.NewLine + "Template: appsettings.example.json");
+        failure = missing.Count == 0
+            ? string.Empty
+            : "Incomplete configuration. Missing:" +
+              Environment.NewLine + "  - " + string.Join(Environment.NewLine + "  - ", missing) +
+              Environment.NewLine + "Template: appsettings.example.json";
+
+        return missing.Count == 0;
     }
 }
 
